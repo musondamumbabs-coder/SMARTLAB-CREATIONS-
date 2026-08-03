@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLab Creations – Where Innovation Meets Execution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:         #0A0F1C;
+      --bg2:        #0E1526;
+      --bg3:        #131B30;
+      --border:     rgba(85,174,240,.16);
+      --white:      #F3F6FC;
+      --muted:      #8A93AC;
+      --muted-dim:  #5C6685;
+      --blue:       #55AEF0;
+      --blue-dim:   #3D87C4;
+      --blue-tint:  rgba(85,174,240,.10);
+      --gold:       #F0A84B;
+      --gold-dim:   #C6842F;
+      --gold-tint:  rgba(240,168,75,.10);
+      --green:      #25D366;
+      --green-tint: rgba(37,211,102,.10);
+      --purple:     #A78BFA;
+      --purple-tint:rgba(167,139,250,.10);
+      --red:        #F0605A;
+      --red-tint:   rgba(240,96,90,.10);
+      --glow:       0 0 26px rgba(85,174,240,.28);
+      --radius:     14px;
+      --radius-sm:  8px;
+      --maxw:       1180px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;font-size:16px;line-height:1.6}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(85,174,240,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(85,174,240,.035) 1px,transparent 1px);background-size:56px 56px}
+    ::selection{background:var(--blue);color:var(--bg)}
+    a{color:inherit}
+    .mono{font-family:'IBM Plex Mono',monospace}
+    .display{font-family:'Space Grotesk',sans-serif}
+    section{position:relative;z-index:1}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding-left:6vw;padding-right:6vw}
+
+    /* ── NAV ───────────────────────────────── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;height:74px;background:rgba(10,15,28,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+    .nav-logo img{height:34px;width:auto;display:block}
+    .nav-logo .wordmark{display:flex;flex-direction:column;line-height:1}
+    .nav-logo .wordmark .w1{font-family:'Space Grotesk',sans-serif;font-size:.98rem;font-weight:700;color:var(--white);letter-spacing:1px}
+    .nav-logo .wordmark .w2{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;color:var(--blue);letter-spacing:2.5px;margin-top:1px}
+    .nav-links{display:flex;gap:2.1rem;list-style:none;align-items:center}
+    .nav-links a{text-decoration:none;color:var(--muted);font-size:.78rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;transition:color .2s;cursor:pointer;font-family:'IBM Plex Mono',monospace}
+    .nav-links a:hover,.nav-links a.active-link{color:var(--blue)}
+    .nav-cta{background:var(--blue)!important;color:var(--bg)!important;padding:.55rem 1.3rem;border-radius:100px;transition:box-shadow .2s,background .2s!important;font-weight:600!important}
+    .nav-cta:hover{box-shadow:var(--glow)}
+    .nav-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.4rem;z-index:110}
+    .nav-burger span{width:22px;height:2px;background:var(--blue);display:block;transition:all .25s}
+    .nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-burger.open span:nth-child(2){opacity:0}
+    .nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+    /* ── HERO ──────────────────────────────── */
+    #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 6vw 100px;background:radial-gradient(ellipse 70% 60% at 50% 35%,rgba(85,174,240,.10) 0%,transparent 70%)}
+    .hero-schematic{position:absolute;inset:0;z-index:-1;overflow:hidden;opacity:.6}
+    .hero-schematic svg{position:absolute;top:0;left:0;width:100%;height:100%}
+    .trace{fill:none;stroke:var(--white);stroke-opacity:.07;stroke-width:1.2}
+    .trace.accent{stroke:var(--blue);stroke-opacity:.22}
+    .node{fill:var(--white);fill-opacity:.1}
+    .node.accent{fill:var(--blue);fill-opacity:.4}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--blue);border:1px solid var(--border);background:var(--bg3);padding:.5rem 1.1rem;border-radius:100px;margin-bottom:2.2rem;animation:fadeUp .8s .05s ease both}
+    .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,6.4vw,4.7rem);font-weight:700;line-height:1.06;letter-spacing:-1.5px;color:var(--white);animation:fadeUp .8s .12s ease both}
+    .hero-title .c{color:var(--blue)}
+    .hero-title .g{color:var(--gold)}
+    .hero-sub{font-size:clamp(1rem,1.7vw,1.18rem);font-style:italic;color:var(--muted);margin:1.6rem 0 2.6rem;max-width:520px;animation:fadeUp .8s .2s ease both}
+    .hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .3s ease both}
+    .btn-primary{background:var(--blue);color:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:.9rem 2rem;border:1px solid var(--blue);border-radius:100px;cursor:pointer;text-decoration:none;transition:box-shadow .2s,transform .15s;display:inline-block}
+    .btn-primary:hover{box-shadow:var(--glow);transform:translateY(-2px)}
+    .btn-outline{background:transparent;color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:.9rem 2rem;border:1px solid var(--border);border-radius:100px;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s}
+    .btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+    .scroll-hint{position:absolute;bottom:2.3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted-dim);font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;animation:fadeUp .8s .6s ease both}
+    .scroll-hint .line{width:1px;height:34px;background:linear-gradient(to bottom,var(--muted-dim),transparent);animation:scrollLine 1.8s ease-in-out infinite}
+    @keyframes scrollLine{0%,100%{opacity:.25;transform:scaleY(.5);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+
+    .section-label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:.9rem;display:flex;align-items:center;gap:.6rem}
+    .section-label::before{content:'';width:22px;height:1px;background:var(--blue)}
+    .section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.6vw,2.5rem);font-weight:700;margin-bottom:1.1rem;letter-spacing:-.5px;color:var(--white)}
+    .section-desc{color:var(--muted);font-size:1rem;max-width:540px;line-height:1.75;margin-bottom:3.4rem}
+
+    /* ── SERVICES ──────────────────────────── */
+    #services{padding:110px 6vw;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.3rem}
+    .service-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:2rem 1.7rem;transition:transform .25s,box-shadow .25s,border-color .25s}
+    .service-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(0,0,0,.3);border-color:var(--blue)}
+    .service-icon{width:44px;height:44px;border-radius:50%;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.3rem}
+    .service-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.02rem;font-weight:700;margin-bottom:.6rem;color:var(--white)}
+    .service-card p{font-size:.87rem;color:var(--muted);line-height:1.65}
+
+    /* ── WORK / PORTFOLIO ──────────────────── */
+    #work{padding:110px 6vw}
+    .work-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+    .work-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+    .work-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(0,0,0,.32);border-color:var(--blue)}
+    .work-img{height:180px;background-size:cover;background-position:center;background-color:var(--bg2)}
+    .work-body{padding:1.3rem 1.4rem 1.6rem}
+    .work-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-tint);background:var(--gold-tint);padding:.22rem .65rem;border-radius:100px;margin-bottom:.8rem}
+    .work-body h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.5rem;color:var(--white)}
+    .work-body p{font-size:.85rem;color:var(--muted);line-height:1.6}
+    .work-empty{grid-column:1/-1;text-align:center;padding:3.2rem 1rem;color:var(--muted);border:1px dashed var(--border);border-radius:var(--radius);background:var(--bg3)}
+    .work-empty .we-icon{font-size:2.2rem;margin-bottom:.8rem;display:block}
+    .work-skel{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);height:270px;position:relative;overflow:hidden}
+    .work-skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(85,174,240,.08),transparent);animation:shimmer 1.4s infinite}
+    @keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+    /* ── WHY ───────────────────────────────── */
+    #why{padding:110px 6vw;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5vw;flex-wrap:wrap}
+    .why-content{flex:1 1 340px}
+    .why-content .section-desc{margin-bottom:0}
+    .why-grid{flex:1 1 340px;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .why-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.5rem;transition:border-color .2s,transform .2s}
+    .why-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+    .why-card .wicon{font-size:1.4rem;margin-bottom:.7rem;display:block}
+    .why-card h4{font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:.35rem;color:var(--white)}
+    .why-card p{font-size:.8rem;color:var(--muted);line-height:1.55}
+
+    /* ── REQUEST FORM ──────────────────────── */
+    #request{padding:110px 6vw}
+    .request-inner{display:grid;grid-template-columns:.85fr 1.15fr;gap:5vw;align-items:start}
+    .request-info{padding-top:.3rem}
+    .request-info .section-desc{max-width:100%;margin-bottom:2.3rem}
+    .contact-info-item{display:flex;align-items:center;gap:.9rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+    .contact-info-item:last-child{border-bottom:none}
+    .contact-info-item .ci-icon{width:38px;height:38px;flex-shrink:0;border-radius:50%;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+    .contact-info-item p{font-size:.87rem;color:var(--muted)}
+    .contact-info-item strong{color:var(--white);display:block;font-size:.92rem;font-family:'Space Grotesk',sans-serif;margin-bottom:.15rem}
+    .form-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:2.3rem}
+    .form-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;color:var(--white);margin-bottom:.4rem;font-weight:700}
+    .form-card > p{font-size:.85rem;color:var(--muted);margin-bottom:1.9rem}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0}
+    .form-group{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem}
+    .form-group label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted-dim);font-weight:500}
+    .form-group input,.form-group select,.form-group textarea{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.78rem 1rem;color:var(--white);font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s,box-shadow .2s}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-tint)}
+    .form-group select option{background:var(--bg2)}
+    .form-group textarea{resize:vertical;min-height:100px}
+    .channel-pill{display:flex;gap:.6rem;margin-bottom:1.1rem}
+    .cpill{flex:1;padding:.7rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:500;cursor:pointer;text-align:center;transition:all .2s}
+    .cpill.active-wa{border-color:var(--green);color:var(--green);background:var(--green-tint)}
+    .cpill.active-email{border-color:var(--gold);color:var(--gold);background:var(--gold-tint)}
+    .submit-btn{width:100%;background:var(--blue);color:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:.8rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1rem;border:none;border-radius:100px;cursor:pointer;transition:box-shadow .2s,transform .15s;margin-top:.4rem}
+    .submit-btn:hover{box-shadow:var(--glow);transform:translateY(-2px)}
+    .submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .form-success-msg{display:none;text-align:center;padding:2.6rem 1rem}
+    .form-success-msg .check{font-size:2.6rem;margin-bottom:.9rem}
+    .form-success-msg h4{font-family:'Space Grotesk',sans-serif;color:var(--blue);margin-bottom:.6rem;font-size:1.15rem}
+    .form-success-msg p{color:var(--muted);font-size:.88rem;line-height:1.6}
+
+    /* ── REVIEWS ───────────────────────────── */
+    #reviews{padding:110px 6vw;background:var(--bg2);border-top:1px solid var(--border)}
+    .reviews-header{text-align:center;margin-bottom:3.4rem}
+    .reviews-header .section-label{justify-content:center}
+    .reviews-header .section-label::before{display:none}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.4rem}
+    .review-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1.7rem}
+    .stars{color:var(--gold);font-size:.95rem;letter-spacing:2px;margin-bottom:.9rem}
+    .review-text{font-size:.87rem;color:var(--white);line-height:1.7;margin-bottom:1.3rem;font-style:italic}
+    .reviewer{display:flex;align-items:center;gap:.8rem}
+    .reviewer-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;color:var(--bg);flex-shrink:0}
+    .reviewer-name{font-weight:600;font-size:.87rem;color:var(--white)}
+    .reviewer-role{font-size:.74rem;color:var(--muted-dim)}
+
+    /* ── FOOTER ────────────────────────────── */
+    footer{background:var(--bg);border-top:1px solid var(--border);padding:3.2rem 6vw 2.4rem;text-align:center;font-size:.8rem;color:var(--muted);position:relative;z-index:1;font-family:'IBM Plex Mono',monospace}
+    footer img{height:52px;width:auto;margin-bottom:1.3rem;opacity:.95}
+    footer span{color:var(--blue)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    .toast{position:fixed;bottom:2rem;right:2rem;z-index:999;background:var(--bg3);border:1px solid var(--blue);border-radius:var(--radius-sm);padding:1rem 1.4rem;font-size:.85rem;font-family:'IBM Plex Sans',sans-serif;color:var(--white);box-shadow:0 16px 34px rgba(0,0,0,.4);transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.error{border-color:var(--red)}
+
+    @media(max-width:900px){.request-inner{grid-template-columns:1fr}}
+    @media(max-width:640px){
+      .nav-burger{display:flex}
+      .nav-links{position:fixed;top:74px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--bg);border-bottom:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height .3s ease}
+      .nav-links.open{max-height:400px}
+      .nav-links li{width:100%}
+      .nav-links a{display:block;padding:1rem 6vw;border-bottom:1px solid var(--border)}
+      .nav-cta{margin:1rem 6vw;text-align:center;border-radius:var(--radius-sm)}
+      .form-row{grid-template-columns:1fr}
+      .why-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo" onclick="closeMobileNav()">
+    <img src="logo-icon.png" alt="SmartLab Creations logo" />
+    <span class="wordmark"><span class="w1">SMARTLAB</span><span class="w2">CREATIONS</span></span>
+  </a>
+  <button class="nav-burger" id="navBurger" onclick="toggleMobileNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services" onclick="closeMobileNav()">Services</a></li>
+    <li><a href="#work" onclick="closeMobileNav()">Our Work</a></li>
+    <li><a href="#why" onclick="closeMobileNav()">About</a></li>
+    <li><a href="#reviews" onclick="closeMobileNav()">Reviews</a></li>
+    <li><a href="#request" class="nav-cta" onclick="closeMobileNav()">Get a Quote</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-schematic">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+      <path class="trace" d="M0,120 H260 V280 H520" />
+      <path class="trace" d="M1200,90 H900 V240 H700 V400" />
+      <path class="trace accent" d="M0,620 H180 V500 H460 V620 H720" />
+      <path class="trace" d="M1200,700 H960 V560 H760" />
+      <path class="trace accent" d="M520,280 V80 H820" />
+      <circle class="node accent" cx="520" cy="280" r="5" />
+      <circle class="node" cx="260" cy="120" r="4" />
+      <circle class="node" cx="700" cy="400" r="4" />
+      <circle class="node accent" cx="180" cy="620" r="5" />
+      <circle class="node" cx="760" cy="560" r="4" />
+      <circle class="node" cx="820" cy="80" r="4" />
+    </svg>
+  </div>
+  <div class="hero-badge"><span class="dot"></span>Technical Services for Students &amp; Projects</div>
+  <h1 class="hero-title">
+    Where <span class="c">Innovation</span><br>
+    Meets <span class="g">Execution</span>
+  </h1>
+  <p class="hero-sub">Circuit design · Simulation · Coding · Report writing — from concept to completion.</p>
+  <div class="hero-btns">
+    <a href="#request" class="btn-primary">Request a Quote</a>
+    <a href="#services" class="btn-outline">Our Services</a>
+  </div>
+  <div class="scroll-hint"><div class="line"></div>scroll</div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-label reveal">What we do</div>
+    <h2 class="section-title reveal">Our Services</h2>
+    <p class="section-desc reveal">High-quality technical support for students and projects across all engineering disciplines.</p>
+    <div class="services-grid">
+      <div class="service-card reveal"><span class="service-icon">🔌</span><h3>Circuit Designing</h3><p>Professional schematic and PCB layout design for academic and commercial projects. Analog, digital, mixed-signal.</p></div>
+      <div class="service-card reveal"><span class="service-icon">💻</span><h3>Circuit Simulation</h3><p>Detailed simulation using Proteus, Multisim, LTspice and similar tools to verify designs before fabrication.</p></div>
+      <div class="service-card reveal"><span class="service-icon">⌨️</span><h3>Coding &amp; Programming</h3><p>Microcontroller code, embedded systems, Python, C/C++, Arduino and more — clean, documented and tested.</p></div>
+      <div class="service-card reveal"><span class="service-icon">📋</span><h3>Project Report Writing</h3><p>Professionally written technical reports that meet academic standards — intro, methodology, results, conclusions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-label reveal">Portfolio</div>
+    <h2 class="section-title reveal">SmartLab's Work</h2>
+    <p class="section-desc reveal">A look at real projects we've completed for students — from working circuits to finished reports.</p>
+    <div class="work-grid" id="workGrid">
+      <div class="work-skel"></div><div class="work-skel"></div><div class="work-skel"></div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap" style="display:flex;gap:5vw;flex-wrap:wrap;align-items:center;padding:0">
+    <div class="why-content">
+      <div class="section-label reveal">Why choose us</div>
+      <h2 class="section-title reveal">Built for Students,<br>Trusted by Results</h2>
+      <p class="section-desc reveal">SmartLab Creations was built with one mission: help students and early-stage engineers bring their ideas to life — fast, affordably and correctly.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><span class="wicon">⚡</span><h4>Fast Turnaround</h4><p>Tight deadlines are our specialty. We move quickly without cutting corners.</p></div>
+      <div class="why-card reveal"><span class="wicon">✅</span><h4>Reliable Quality</h4><p>Every deliverable is reviewed and tested before handover.</p></div>
+      <div class="why-card reveal"><span class="wicon">🎓</span><h4>Student-Friendly</h4><p>Pricing and communication designed around student budgets and schedules.</p></div>
+      <div class="why-card reveal"><span class="wicon">🤝</span><h4>End-to-End Support</h4><p>From the first idea sketch to final submission — we're with you throughout.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="request">
+  <div class="wrap request-inner" style="padding-left:0;padding-right:0">
+    <div class="request-info reveal">
+      <div class="section-label">Get a Quote</div>
+      <h2 class="section-title">Tell Us About<br>Your Project</h2>
+      <p class="section-desc">Fill in the form and we'll get back to you quickly with a quotation. Choose how you want us to reply.</p>
+      <div class="contact-info-item"><span class="ci-icon">📱</span><div><strong>WhatsApp / Call</strong><p>0772 530 495 &nbsp;|&nbsp; 0779 520 821</p></div></div>
+      <div class="contact-info-item"><span class="ci-icon">✉️</span><div><strong>Email</strong><p>smartlabcreations@gmail.com</p></div></div>
+      <div class="contact-info-item"><span class="ci-icon">🌐</span><div><strong>Website</strong><p>musondamumbabs-coder.github.io/SMARTLAB-CREATIONS-</p></div></div>
+    </div>
+
+    <div class="form-card reveal">
+      <h3>Project Request Form</h3>
+      <p>We'll respond with a detailed quotation for your project.</p>
+
+      <div id="requestForm">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name *</label><input type="text" id="rqName" placeholder="e.g. Mulenga Phiri" /></div>
+          <div class="form-group"><label>Phone / WhatsApp *</label><input type="text" id="rqPhone" placeholder="e.g. 0972 000 000" /></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="rqEmail" placeholder="you@example.com" /></div>
+        <div class="form-group"><label>Institution / School</label><input type="text" id="rqInstitution" placeholder="e.g. NORTEC, UNZA, CBU" /></div>
+        <div class="form-group"><label>Service Required *</label>
+          <select id="rqService">
+            <option value="">Select a service…</option>
+            <option>Circuit Designing</option>
+            <option>Circuit Simulation</option>
+            <option>Coding &amp; Programming</option>
+            <option>Project Report Writing</option>
+            <option>Multiple Services</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Project Title / Topic</label><input type="text" id="rqTitle" placeholder="e.g. Smart Energy Monitoring System" /></div>
+        <div class="form-group"><label>Project Description *</label><textarea id="rqDesc" placeholder="Describe what you need — tools, deadline, level of detail, any special requirements…"></textarea></div>
+        <div class="form-group"><label>Deadline</label><input type="date" id="rqDeadline" /></div>
+
+        <div class="form-group" style="margin-bottom:.6rem"><label>Preferred Reply Channel</label></div>
+        <div class="channel-pill">
+          <button class="cpill active-wa" id="cpWA" onclick="setChannel('wa')">💬 WhatsApp</button>
+          <button class="cpill" id="cpEmail" onclick="setChannel('email')">✉️ Email</button>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitRequest()">Send Project Request →</button>
+      </div>
+
+      <div class="form-success-msg" id="successMsg">
+        <div class="check">✅</div>
+        <h4>Request Received!</h4>
+        <p>We've received your project request and will get back to you with a quotation shortly.<br><br>Check your <strong id="replyChannel" style="color:var(--blue)"></strong> for our reply.</p>
+        <button class="btn-primary" style="margin-top:1.5rem" onclick="resetRequest()">Submit Another</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="reviews-header">
+      <div class="section-label reveal">Testimonials</div>
+      <h2 class="section-title reveal">What Our Clients Say</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal"><div class="stars">★★★★★</div><p class="review-text">SmartLab helped me finish my final year project simulation in two days. The circuit worked perfectly and the report was top quality. Highly recommended!</p><div class="reviewer"><div class="reviewer-avatar">TM</div><div><div class="reviewer-name">Thandeka M.</div><div class="reviewer-role">Electrical Engineering Student</div></div></div></div>
+      <div class="review-card reveal"><div class="stars">★★★★★</div><p class="review-text">The Arduino code they wrote for my smart irrigation system was clean and well-commented. Saved me weeks of debugging. Very professional team.</p><div class="reviewer"><div class="reviewer-avatar">KC</div><div><div class="reviewer-name">Kelvin C.</div><div class="reviewer-role">Computer Engineering, UNZA</div></div></div></div>
+      <div class="review-card reveal"><div class="stars">★★★★☆</div><p class="review-text">Great service. My PCB schematic was delivered on time and the Proteus simulation showed exactly what I needed for my viva presentation. Will use again.</p><div class="reviewer"><div class="reviewer-avatar">BP</div><div><div class="reviewer-name">Bridget P.</div><div class="reviewer-role">Electronics &amp; Telecoms Student</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="logo-full.png" alt="SmartLab Creations" />
+  <p>⚡ Fast &nbsp;·&nbsp; ✅ Reliable &nbsp;·&nbsp; 🎓 Student-Friendly</p>
+  <p style="margin-top:.6rem">© 2026 <span>SmartLab Creations</span>. Where Innovation Meets Execution.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase + EmailJS -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+// ══════════════════════════════════════════════
+// 🔧 CONFIG — replace with your actual values
+// ══════════════════════════════════════════════
+const FB_CONFIG = {
+  apiKey:            "AIzaSyB_BjaKagWe5YsBaSk1DIyyndvOMvfJlCo",
+  authDomain:        "smart-lab-creations-1.firebaseapp.com",
+  projectId:         "smart-lab-creations-1",
+  storageBucket:     "smart-lab-creations-1.firebasestorage.app",
+  messagingSenderId: "639739815666",
+  appId:             "1:639739815666:web:11dfe4b453e4c152cd926b"
+};
+const EMAILJS_PUBLIC_KEY  = "QCG0TzBGCPUlHKe1x";
+const EMAILJS_SERVICE_ID  = "service_arlambf";
+const EMAILJS_TEMPLATE_ID = "emplate_j2m5w9m"; // template for admin notification
+// ══════════════════════════════════════════════
+
+firebase.initializeApp(FB_CONFIG);
+const db = firebase.firestore();
+try { emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e) { console.warn('EmailJS not configured yet.'); }
+
+let replyChannel = 'wa';
+
+function setChannel(ch) {
+  replyChannel = ch;
+  document.getElementById('cpWA').className = ch === 'wa' ? 'cpill active-wa' : 'cpill';
+  document.getElementById('cpEmail').className = ch === 'email' ? 'cpill active-email' : 'cpill';
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3500);
+}
+
+// ── MOBILE NAV ──────────────────────────────────
+function toggleMobileNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('navBurger').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('navLinks').classList.remove('open');
+  document.getElementById('navBurger').classList.remove('open');
+}
+
+// ── REQUEST SUBMISSION ──────────────────────────
+// NOTE: The Firestore write is what actually delivers the request to the
+// admin dashboard. The EmailJS call is just a "heads up" notification email
+// and is treated as best-effort — it must NEVER cause a false "something
+// went wrong" message when the request itself was saved successfully.
+async function submitRequest() {
+  const name        = document.getElementById('rqName').value.trim();
+  const phone       = document.getElementById('rqPhone').value.trim();
+  const email       = document.getElementById('rqEmail').value.trim();
+  const institution = document.getElementById('rqInstitution').value.trim();
+  const service     = document.getElementById('rqService').value;
+  const title       = document.getElementById('rqTitle').value.trim();
+  const desc        = document.getElementById('rqDesc').value.trim();
+  const deadline    = document.getElementById('rqDeadline').value;
+
+  if (!name || !phone || !service || !desc) {
+    showToast('Please fill in Name, Phone, Service and Description.', true);
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const requestData = {
+    name, phone, email, institution, service, title, desc, deadline,
+    replyChannel,
+    status: 'new',
+    submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    submittedAtISO: new Date().toISOString()
+  };
+
+  // 1) Save to Firestore — this is the step that matters. If this fails,
+  //    the request truly did not go through, so we show an error and stop.
+  try {
+    await db.collection('requests').add(requestData);
+  } catch (err) {
+    console.error('Firestore save failed:', err);
+    showToast('Could not send your request — please check your connection and try again.', true);
+    btn.disabled = false;
+    btn.textContent = 'Send Project Request →';
+    return;
+  }
+
+  // 2) Send an email notification to the admin — best effort only.
+  //    A failure here (e.g. EmailJS not fully configured) must not be
+  //    shown to the customer as an error, since their request already saved.
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      client_name:    name,
+      client_phone:   phone,
+      client_email:   email || 'Not provided',
+      institution:    institution || 'Not provided',
+      service:        service,
+      project_title:  title || 'Not provided',
+      description:    desc,
+      deadline:       deadline || 'Not specified',
+      reply_channel:  replyChannel === 'wa' ? 'WhatsApp' : 'Email',
+      submitted_at:   new Date().toLocaleString()
+    });
+  } catch (err) {
+    console.warn('Email notification failed (non-critical, request was still saved):', err);
+  }
+
+  document.getElementById('requestForm').style.display = 'none';
+  document.getElementById('replyChannel').textContent = replyChannel === 'wa' ? 'WhatsApp' : 'Email';
+  document.getElementById('successMsg').style.display = 'block';
+}
+
+function resetRequest() {
+  ['rqName','rqPhone','rqEmail','rqInstitution','rqTitle','rqDesc','rqDeadline'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('rqService').value = '';
+  setChannel('wa');
+  document.getElementById('requestForm').style.display = 'block';
+  document.getElementById('successMsg').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = 'Send Project Request →';
+}
+
+// ── PORTFOLIO ("SmartLab's Work") ───────────────
+function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function loadPortfolio() {
+  const grid = document.getElementById('workGrid');
+  db.collection('portfolio').orderBy('createdAt','desc').get().then(snap => {
+    if (snap.empty) {
+      grid.innerHTML = `<div class="work-empty"><span class="we-icon">🛠️</span><p>Our project showcase is coming soon — check back shortly!</p></div>`;
+      return;
+    }
+    grid.innerHTML = snap.docs.map(d => {
+      const p = d.data();
+      const img = p.image ? `style="background-image:url('${p.image}')"` : '';
+      return `<div class="work-card reveal">
+        <div class="work-img" ${img}></div>
+        <div class="work-body">
+          <span class="work-tag">${esc(p.category || 'Project')}</span>
+          <h3>${esc(p.title || 'Untitled Project')}</h3>
+          <p>${esc(p.description || '')}</p>
+        </div>
+      </div>`;
+    }).join('');
+    document.querySelectorAll('#workGrid .reveal').forEach(el => obs.observe(el));
+  }).catch(err => {
+    console.warn('Portfolio load failed:', err);
+    grid.innerHTML = `<div class="work-empty"><span class="we-icon">🛠️</span><p>Our project showcase is coming soon — check back shortly!</p></div>`;
+  });
+}
+loadPortfolio();
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => obs.observe(el));
+
+// Highlight active nav link on scroll
+const navSections = ['hero','services','work','why','reviews','request'];
+const navLinkEls = document.querySelectorAll('.nav-links a[href^="#"]');
+window.addEventListener('scroll', () => {
+  let current = navSections[0];
+  navSections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY + 90 >= el.offsetTop) current = id;
+  });
+  navLinkEls.forEach(a => a.classList.toggle('active-link', a.getAttribute('href') === '#' + current));
+});
+</script>
+</body>
+</html>
