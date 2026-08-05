@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartLab Creations – Where Innovation Meets Execution</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="icon" type="image/png" href="logo-icon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root{
@@ -195,6 +196,16 @@
       .nav-cta{margin:1rem 6vw;text-align:center;border-radius:var(--radius-sm)}
       .form-row{grid-template-columns:1fr}
       .why-grid{grid-template-columns:1fr}
+      nav{padding:0 4vw}
+      .nav-logo img{height:28px}
+      .nav-logo .wordmark .w1{font-size:.82rem}
+      .nav-logo .wordmark .w2{font-size:.52rem;letter-spacing:1.5px}
+      .hero-badge{font-size:.62rem;padding:.45rem .8rem}
+    }
+    @media(max-width:380px){
+      .nav-logo{gap:.5rem}
+      .nav-logo .wordmark .w2{display:none}
+      .cpill{font-size:.7rem;padding:.6rem .4rem}
     }
   </style>
 </head>
@@ -346,10 +357,38 @@
       <div class="section-label reveal">Testimonials</div>
       <h2 class="section-title reveal">What Our Clients Say</h2>
     </div>
-    <div class="reviews-grid">
+    <div class="reviews-grid" id="reviewsGrid">
       <div class="review-card reveal"><div class="stars">★★★★★</div><p class="review-text">SmartLab helped me finish my final year project simulation in two days. The circuit worked perfectly and the report was top quality. Highly recommended!</p><div class="reviewer"><div class="reviewer-avatar">TM</div><div><div class="reviewer-name">Thandeka M.</div><div class="reviewer-role">Electrical Engineering Student</div></div></div></div>
       <div class="review-card reveal"><div class="stars">★★★★★</div><p class="review-text">The Arduino code they wrote for my smart irrigation system was clean and well-commented. Saved me weeks of debugging. Very professional team.</p><div class="reviewer"><div class="reviewer-avatar">KC</div><div><div class="reviewer-name">Kelvin C.</div><div class="reviewer-role">Computer Engineering, UNZA</div></div></div></div>
       <div class="review-card reveal"><div class="stars">★★★★☆</div><p class="review-text">Great service. My PCB schematic was delivered on time and the Proteus simulation showed exactly what I needed for my viva presentation. Will use again.</p><div class="reviewer"><div class="reviewer-avatar">BP</div><div><div class="reviewer-name">Bridget P.</div><div class="reviewer-role">Electronics &amp; Telecoms Student</div></div></div></div>
+    </div>
+
+    <div class="form-card reveal" style="max-width:560px;margin:3.5rem auto 0">
+      <h3>Share Your Experience</h3>
+      <p>Worked with us before? Leave a review — it'll appear here once approved.</p>
+      <div id="reviewForm">
+        <div class="form-row">
+          <div class="form-group"><label>Your Name *</label><input type="text" id="rvName" placeholder="e.g. Mulenga Phiri" /></div>
+          <div class="form-group"><label>Institution / Role</label><input type="text" id="rvRole" placeholder="e.g. UNZA Student" /></div>
+        </div>
+        <div class="form-group"><label>Rating</label>
+          <select id="rvRating">
+            <option value="5">★★★★★ Excellent</option>
+            <option value="4">★★★★☆ Great</option>
+            <option value="3">★★★☆☆ Good</option>
+            <option value="2">★★☆☆☆ Fair</option>
+            <option value="1">★☆☆☆☆ Poor</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Your Review *</label><textarea id="rvText" placeholder="Tell others about your experience working with us…"></textarea></div>
+        <button class="submit-btn" id="rvSubmitBtn" onclick="submitReview()">Submit Review →</button>
+      </div>
+      <div class="form-success-msg" id="rvSuccessMsg">
+        <div class="check">✅</div>
+        <h4>Thank You!</h4>
+        <p>Your review has been submitted and will appear here once approved.</p>
+        <button class="btn-primary" style="margin-top:1.5rem" onclick="resetReviewForm()">Submit Another</button>
+      </div>
     </div>
   </div>
 </section>
@@ -503,9 +542,18 @@ function loadPortfolio() {
     }
     grid.innerHTML = snap.docs.map(d => {
       const p = d.data();
-      const img = p.image ? `style="background-image:url('${p.image}')"` : '';
+      let mediaHtml;
+      if (p.mediaType === 'video' && p.videoUrl) {
+        const yt = p.videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{6,})/);
+        mediaHtml = yt
+          ? `<div class="work-img" style="padding:0"><iframe src="https://www.youtube.com/embed/${yt[1]}" style="width:100%;height:100%;border:0" allowfullscreen></iframe></div>`
+          : `<video class="work-img" src="${p.videoUrl}" controls style="background:var(--bg2)"></video>`;
+      } else {
+        const img = p.image ? `style="background-image:url('${p.image}')"` : '';
+        mediaHtml = `<div class="work-img" ${img}></div>`;
+      }
       return `<div class="work-card reveal">
-        <div class="work-img" ${img}></div>
+        ${mediaHtml}
         <div class="work-body">
           <span class="work-tag">${esc(p.category || 'Project')}</span>
           <h3>${esc(p.title || 'Untitled Project')}</h3>
@@ -520,6 +568,78 @@ function loadPortfolio() {
   });
 }
 loadPortfolio();
+
+// ── CUSTOMER REVIEWS ─────────────────────────────
+function starString(n) {
+  n = Math.max(1, Math.min(5, parseInt(n) || 5));
+  return '★★★★★☆☆☆☆☆'.slice(5 - n, 10 - n);
+}
+
+async function submitReview() {
+  const name = document.getElementById('rvName').value.trim();
+  const role = document.getElementById('rvRole').value.trim();
+  const rating = document.getElementById('rvRating').value;
+  const text = document.getElementById('rvText').value.trim();
+
+  if (!name || !text) {
+    showToast('Please add your name and a review.', true);
+    return;
+  }
+
+  const btn = document.getElementById('rvSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    await db.collection('reviews').add({
+      name, role, rating: parseInt(rating), text,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  } catch (err) {
+    console.error('Review save failed:', err);
+    showToast('Could not submit your review — please try again.', true);
+    btn.disabled = false;
+    btn.textContent = 'Submit Review →';
+    return;
+  }
+
+  document.getElementById('reviewForm').style.display = 'none';
+  document.getElementById('rvSuccessMsg').style.display = 'block';
+}
+
+function resetReviewForm() {
+  ['rvName','rvRole','rvText'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('rvRating').value = '5';
+  document.getElementById('reviewForm').style.display = 'block';
+  document.getElementById('rvSuccessMsg').style.display = 'none';
+  document.getElementById('rvSubmitBtn').disabled = false;
+  document.getElementById('rvSubmitBtn').textContent = 'Submit Review →';
+}
+
+function loadPublishedReviews() {
+  db.collection('reviews').where('status','==','published').get().then(snap => {
+    if (snap.empty) return;
+    const docs = snap.docs.map(d => d.data()).sort((a,b) => {
+      const ta = a.createdAt ? a.createdAt.toMillis() : 0;
+      const tb = b.createdAt ? b.createdAt.toMillis() : 0;
+      return tb - ta;
+    });
+    const grid = document.getElementById('reviewsGrid');
+    const initials = n => n.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+    const extra = docs.map(r => `<div class="review-card reveal">
+        <div class="stars">${starString(r.rating)}</div>
+        <p class="review-text">${esc(r.text)}</p>
+        <div class="reviewer">
+          <div class="reviewer-avatar">${esc(initials(r.name||'??'))}</div>
+          <div><div class="reviewer-name">${esc(r.name||'Anonymous')}</div><div class="reviewer-role">${esc(r.role||'Client')}</div></div>
+        </div>
+      </div>`).join('');
+    grid.insertAdjacentHTML('beforeend', extra);
+    document.querySelectorAll('#reviewsGrid .reveal').forEach(el => obs.observe(el));
+  }).catch(err => console.warn('Reviews load failed:', err));
+}
+loadPublishedReviews();
 
 // Scroll reveal
 const revealEls = document.querySelectorAll('.reveal');
