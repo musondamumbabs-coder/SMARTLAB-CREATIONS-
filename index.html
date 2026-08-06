@@ -38,6 +38,7 @@
     body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;font-size:16px;line-height:1.6}
     body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(85,174,240,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(85,174,240,.035) 1px,transparent 1px);background-size:56px 56px}
     ::selection{background:var(--blue);color:var(--bg)}
+    .brand-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(60vw,560px);height:auto;opacity:.035;z-index:0;pointer-events:none;user-select:none}
     a{color:inherit}
     .mono{font-family:'IBM Plex Mono',monospace}
     .display{font-family:'Space Grotesk',sans-serif}
@@ -210,6 +211,7 @@
   </style>
 </head>
 <body>
+<img src="logo-icon.png" class="brand-watermark" alt="" />
 
 <nav>
   <a href="#hero" class="nav-logo" onclick="closeMobileNav()">
